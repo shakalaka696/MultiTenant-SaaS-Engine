@@ -120,8 +120,63 @@ const SegmentSchema = new EntitySchema({
   }
 });
 
+const EmailCampaignSchema = new EntitySchema({
+  name: "EmailCampaign",
+  tableName: "email_campaigns",
+  columns: {
+    id: { primary: true, type: "uuid", generated: "uuid" },
+    name: { type: "varchar" },
+    subject: { type: "varchar" },
+    body: { type: "text" },
+    status: { 
+      type: "enum", 
+      enum: ["DRAFT", "RUNNING", "COMPLETED", "FAILED"], 
+      default: "DRAFT" 
+    },
+    tenantId: { type: "uuid" },
+    createdById: { type: "uuid" },
+    createdAt: { type: "timestamp", createDate: true }
+  },
+  relations: {
+    tenant: { target: "Tenant", type: "many-to-one", joinColumn: { name: "tenantId" } },
+    creator: { target: "AdminUser", type: "many-to-one", joinColumn: { name: "createdById" } },
+    segments: {
+      target: "Segment",
+      type: "many-to-many",
+      joinTable: {
+        name: "campaign_segments", // Junction table for C-to-S
+        joinColumn: { name: "campaignId", referencedColumnName: "id" },
+        inverseJoinColumn: { name: "segmentId", referencedColumnName: "id" }
+      }
+    },
+    jobs: { target: "CampaignJob", type: "one-to-many", inverseSide: "campaign" }
+  }
+});
 
-module.exports = { TenantSchema, AdminSchema, CustomerSchema, OTPSchema, SegmentSchema };
+const CampaignJobSchema = new EntitySchema({
+  name: "CampaignJob",
+  tableName: "campaign_jobs",
+  columns: {
+    id: { primary: true, type: "uuid", generated: "uuid" },
+    campaignId: { type: "uuid" },
+    customerId: { type: "uuid" },
+    tenantId: { type: "uuid" },
+    status: { 
+      type: "enum", 
+      enum: ["PENDING", "SENT", "FAILED"], 
+      default: "PENDING" 
+    },
+    sentAt: { type: "timestamp", nullable: true },
+    error: { type: "text", nullable: true },
+    createdAt: { type: "timestamp", createDate: true }
+  },
+  relations: {
+    campaign: { target: "EmailCampaign", type: "many-to-one", joinColumn: { name: "campaignId" } },
+    customer: { target: "Customer", type: "many-to-one", joinColumn: { name: "customerId" } }
+  }
+});
+
+module.exports = { TenantSchema, AdminSchema, CustomerSchema, OTPSchema, SegmentSchema, EmailCampaignSchema, CampaignJobSchema };
 
 
 

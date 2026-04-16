@@ -3,9 +3,9 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "start": "node src/app.js",
-    "dev": "nodemon src/app.js",
-    "redis":"node src/workers/otpWorker.js"
+    "start": "node src/index.js",
+    "dev": "nodemon src/index.js",
+    "redis":"node src/worker-runner.js"
   },
   "keywords": [],
   "author": "",

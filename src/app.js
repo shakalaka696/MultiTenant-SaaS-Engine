@@ -1,5 +1,5 @@
 const express = require('express');
-const { AppDataSource } = require('./config/database');
+// const { AppDataSource } = require('./config/database');
 
 
 const tenantRoutes = require('./routes/tenantRoutes');
@@ -20,13 +20,16 @@ app.use('/api/customers', publicRoutes);
 app.use('/api/admin', adminRoutes);
 
 
-AppDataSource.initialize()
-  .then(() => {
-    console.log("Database Connected to Neon");
-    app.listen(3000, () => {
-      console.log(" Server is running on http://localhost:3000");
-    });
-  })
-  .catch((error) => {
-    console.log("Database connection failed:", error);
-  });
+module.exports = app;
+
+// AppDataSource.initialize()
+//   .then(() => {
+//     console.log("Database Connected to Neon");
+//     app.listen(3000, () => {
+//       console.log(" Server is running on http://localhost:3000");
+//     });
+//   })
+//   .catch((error) => {
+//     console.log("Database connection failed:", error);
+//   });
+
