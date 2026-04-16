@@ -8,7 +8,6 @@ const AppDataSource = new DataSource({
   synchronize: true, // This builds the tables for you!
   ssl: { rejectUnauthorized: false },
   entities : [TenantSchema, AdminSchema, CustomerSchema, OTPSchema, SegmentSchema]
-  // entities: [require('../models/entities').TenantSchema, require('../models/entities').AdminSchema, require('../models/entities').CustomerSchema]
 });
 
 module.exports = { AppDataSource };
